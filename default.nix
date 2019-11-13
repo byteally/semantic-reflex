@@ -1,9 +1,17 @@
-(import ./reflex-platform {}).project ({ pkgs, hackGet, ... }: {
+(import ./reflex-platform.nix {}).project ({ pkgs, hackGet, ... }: {
   packages = {
     semantic-reflex = ./semantic-reflex;
     semantic-reflex-example = ./semantic-reflex-example;
     reflex-dom-nested-routing = hackGet ./deps/reflex-dom-nested-routing;
-    reflex-dom-contrib = hackGet ./deps/reflex-dom-contrib;
+    # reflex-dom-contrib = hackGet ./deps/reflex-dom-contrib;
+    reflex-dom-contrib = self.callCabal2nix
+      "reflex-dom-contrib"
+      (pkgs.fetchFromGitHub {
+        owner = "reflex-frp";
+        repo = "reflex-dom-contrib";
+        rev = "b9e2965dff062a4e13140f66d487362a34fe58b3";
+        sha256 = "1aa045mr82hdzzd8qlqhfrycgyhd29lad8rf7vsqykly9axpl52a";
+      }) {};
   };
 
   overrides = self: super: {
